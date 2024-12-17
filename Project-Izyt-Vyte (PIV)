@@ -1,0 +1,72 @@
+import random
+
+class Chatbot:
+    def __init__(self, name="ChatBuddy"):
+        self.name = name
+        self.friends = {}
+
+    def greet_user(self, user_name):
+        self.friends[user_name] = {'friendship_level': 0}
+        greeting = random.choice([
+            f"Hey {user_name}, it's great to see you!",
+            f"Hello {user_name}, I've been waiting to chat with you!",
+            f"Hey there, {user_name}! Ready to have some fun?"
+        ])
+        return greeting
+
+    def small_talk(self):
+        return random.choice([
+            "How was your day?",
+            "What have you been up to lately?",
+            "Got any exciting plans this week?"
+        ])
+    
+    def friendly_compliment(self, user_name):
+        compliments = [
+            f"You've got such a cool vibe, {user_name}.",
+            f"I can't stop smiling whenever we chat, {user_name}.",
+            f"You're honestly one of the nicest people I've met, {user_name}!"
+        ]
+        return random.choice(compliments)
+    
+    def flirt(self, user_name):
+        # This can be more playful, but must always remain light and respectful
+        flirtations = [
+            f"Is it just me, or does the room get brighter whenever you show up, {user_name}?",
+            f"Are you always this charming, or is it just when you talk to me?",
+            f"I think we’d make a pretty cute duo, {user_name}, what do you think?"
+        ]
+        return random.choice(flirtations)
+
+    def handle_message(self, user_name, message):
+        # Simple logic to increase friendship level based on the conversation
+        if "hi" in message.lower() or "hello" in message.lower():
+            return self.greet_user(user_name)
+        
+        if "flirt" in message.lower():
+            return self.flirt(user_name)
+        
+        if "friend" in message.lower():
+            self.friends[user_name]['friendship_level'] += 1
+            return self.friendly_compliment(user_name)
+
+        if self.friends[user_name]['friendship_level'] > 5:
+            return self.friendly_compliment(user_name)
+        
+        return self.small_talk()
+
+    def run_chat(self, user_name):
+        print(self.greet_user(user_name))
+        while True:
+            user_input = input(f"{user_name}: ")
+            if "exit" in user_input.lower():
+                print(f"{self.name}: It was awesome chatting with you, {user_name}! Catch you later.")
+                break
+            print(f"{self.name}: {self.handle_message(user_name, user_input)}")
+            
+
+# To start the chat:
+if __name__ == "__main__":
+    chatbot = Chatbot()
+    user_name = input("What's your name? ")
+    chatbot.run_chat(user_name)
